@@ -296,7 +296,7 @@
 
 /obj/item/clothing/neck/roguetown/gorget
 	name = "gorget"
-	desc = "A series of iron plates designed to protect the neck, traditionally atop a jacket or cuirass. While it lacks a coif's coverage, it is more-than-capable of thwarting a dagger's viscous bite."
+	desc = "A series of iron plates designed to protect the neck, traditionally atop a jacket or cuirass. While it lacks a coif's coverage, it is more-than-capable of thwarting a dagger's vicious bite."
 	icon_state = "gorget"
 	armor = ARMOR_PLATE
 	smeltresult = /obj/item/ingot/iron
@@ -522,7 +522,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/reform
 	name = "reformist psycross"
-	desc = "'It occured to me that our God had left us, but not our ability to endure hardship. We shall make something out of this world, I said, before we pass onto the next.'"
+	desc = "'It matters not whether Psydon is alive or has been slain by the Archenemy—for the gods, life and death do not hold the same meaning as they do for mortals, and the Almighty Father's influence on the world endures so long as there are those who believe in Him.'" //TA EDIT
 	sellprice = 0	//Heresy of the highest order. Unless...
 	icon_state = "reformistcross"
 
@@ -1058,6 +1058,7 @@
 	desc = "The world is yours, as they say - yet, why doth the Gods still led us astray?"
 	color = "#ffc960"
 	smeltresult = /obj/item/ingot/component/matthios
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios/Initialize()
 	. = ..()
@@ -1073,6 +1074,7 @@
 	material_category = ARMOR_MAT_PLATE
 	armor_class = ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/component/zizo
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/bevor/zizo/Initialize()
 	. = ..()
@@ -1095,6 +1097,7 @@
 	desc = "Curled plate, cradling the neck. Once, they were chains - now, they've allowed you to break free."
 	color = "#ddc0a7"
 	smeltresult = /obj/item/ingot/component/graggar
+	unenchantable = TRUE
 
 /obj/item/clothing/neck/roguetown/gorget/steel/graggar/Initialize()
 	. = ..()
