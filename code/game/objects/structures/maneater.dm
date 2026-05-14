@@ -73,6 +73,9 @@
 		return
 
 	var/mob/living/victim = AM
+
+	if(!istype(victim))
+		return
 	if(victim == planter)
 		return
 	if(victim.m_intent == MOVE_INTENT_SNEAK)

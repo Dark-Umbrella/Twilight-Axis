@@ -19,15 +19,15 @@
 	if(volume >= 60)
 		M.reagents.remove_reagent(/datum/reagent/medicine/viscera, 2) //No overhealing.
 	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/calendula))
-		brut_mod += -1.5
+		brut_mod = -2.5
 	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/taraxacum))
-		burn_mod += -1.5
+		burn_mod = -2.5
 	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/leech))
-		woundmod += 5
+		woundmod = 6
 	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/bonedust))
-		bloodmod += 20
+		bloodmod = 20
 	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/leaf))
-		toxinmod += -1.5
+		toxinmod = -2.5
 	if(M.blood_volume < BLOOD_VOLUME_NORMAL)
 		M.blood_volume = min(M.blood_volume+bloodmod, BLOOD_VOLUME_NORMAL)
 	var/list/wCount = M.get_wounds()
