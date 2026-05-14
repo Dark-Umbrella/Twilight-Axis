@@ -44,7 +44,7 @@
 	dropItemToGround(stored_neck)
 	dropItemToGround(stored_ring)
 
-	wildshape_drop_items()
+	//wildshape_drop_items() TA Edit
 
 	regenerate_icons()
 	icon = null
@@ -159,7 +159,7 @@
 	dropItemToGround(stored_neck)
 	dropItemToGround(stored_ring)
 
-	wildshape_drop_items()
+	//wildshape_drop_items() TA Edit
 
 	icon = null
 	invisibility = INVISIBILITY_MAXIMUM
