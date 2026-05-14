@@ -361,7 +361,7 @@
 			return FALSE
 	
 	if(!is_type_in_list(target, turf_whitelist))
-		to_chat(owner, span_warning("This turf can't be on fiyaaaah! (It's blocked sire.)"))
+		to_chat(owner, span_warning("This turf is not natural; nothing can grow on it! (It's blocked sire.)"))
 		return FALSE
 
 	new /obj/effect/temp_visual/trap/emergence(T)
@@ -484,7 +484,7 @@
 	var/skill_second = owner.get_skill_level(associated_skill)
 
 	if(!target || !target.Enter(owner) || !is_type_in_list(target, turf_whitelist))
-		to_chat(owner, span_warning("This turf can't be on fiyaaaah! (It's blocked sire.)"))
+		to_chat(owner, span_warning("This turf is not natural; nothing can grow on it! (It's blocked sire.)"))
 		return FALSE
 
 	if(skill > 4 || skill_second > 4) //druid master or miracle master
