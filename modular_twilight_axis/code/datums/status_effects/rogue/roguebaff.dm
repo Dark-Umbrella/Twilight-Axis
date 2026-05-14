@@ -207,16 +207,20 @@
 	if(owner)
 		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
 		if(owner.cmode)
+			owner.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		if(owner.construct)
+			owner.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
 /datum/status_effect/buff/grave_powder/tick()
 	if(owner) //heal and immobilize owner
 		if(owner.cmode)
+			owner.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		if(owner.construct)
+			owner.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 		H.color = "#fbbebe"

@@ -1,6 +1,7 @@
 /obj/item/ointment
 	name = "debug ointment"
-	icon_state = null
+	icon = 'modular_twilight_axis/icons/roguetown/items/ointments.dmi'
+	icon_state = "ointment_empty"
 	desc = "WTF man?"
 	possible_item_intents = list(/datum/intent/use)
 	force = 0
@@ -14,97 +15,17 @@
 	max_integrity = 20
 	w_class = WEIGHT_CLASS_TINY
 	experimental_inhand = TRUE
-	/// Effectiveness when used as a bandage, how much it'll lower the bloodloss, bloodloss will get multiplied by this.
-	var/bandage_effectiveness = 0.5
-	var/bandage_speed = 7 SECONDS
-	///How much you can bleed into the bandage until it needs to be changed
-	var/bandage_health = 150 //75 total blood stopped
-	//bandage_health * (1 - bandage_effectiveness) = total amount of blood saved from one bandage
-	/// If the bandage is soaked in some kind of medicine.
-	var/medicine_quality
-	var/medicine_amount = 0
-	var/use_amount = 0
+	var/treatment_speed = 7 SECONDS
+	var/brute = 0
+	var/burn = 0
+	var/wound = 0
 
-/obj/item/ointment/examine(mob/user)
-	. = ..()
-	if(use_amount)
-		. += span_notice("It's can use [useuse_amount] times!")
+/obj/item/ointment/attack(mob/living/M, mob/user)
 
-/obj/item/natural/cloth/attack(mob/living/M, mob/user)
+	ointment(M, user)
 
-	bandage(M, user)
-
-/obj/item/natural/cloth/wash_act()
-	. = ..()
-	wet = 10
-	bandage_health = initial(bandage_health)
-	medicine_amount = 0
-	medicine_quality = 0
-	detail_color = null
-	desc = initial(desc)
-	update_icon()
-
-/obj/item/natural/cloth/attackby(obj/item/I, mob/living/user, params)
-	var/obj/item/reagent_containers/C = I
-	if(!istype(C))
-		return ..()
-	if(C.reagents.has_reagent(/datum/reagent/medicine/healthpot, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in lyfeblood..."))
-		if(do_after(user, 3 SECONDS, target = src))
-			C.reagents.remove_reagent(/datum/reagent/medicine/healthpot, 10)
-			medicine_quality = 1
-			medicine_amount += 10
-			desc += " It has been soaked in lyfeblood."
-			detail_color = "#ff0000"
-			update_icon()
-	if(C.reagents.has_reagent(/datum/reagent/medicine/stronghealth, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in strong lyfeblood..."))
-		if(do_after(user, 3 SECONDS, target = src))
-			C.reagents.remove_reagent(/datum/reagent/medicine/stronghealth, 10)
-			medicine_quality = 2
-			medicine_amount += 10
-			desc += " It has been soaked in strong lyfeblood."
-			detail_color = "#820000"
-			update_icon()
-	if(C.reagents.has_reagent(/datum/reagent/consumable/ethanol/aqua_vitae, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in aqua vitae..."))
-		if(do_after(user, 3 SECONDS, target = src))
-			C.reagents.remove_reagent(/datum/reagent/consumable/ethanol/aqua_vitae, 10)
-			medicine_quality = 0.5 //slower than health potions, more healing overall. Good for fractures or other big wounds.
-			medicine_amount += 60
-			desc += " It has been soaked in aqua vitae."
-			detail_color = "#6e6e6e"
-			update_icon()
-	if(C.reagents.has_reagent(/datum/reagent/water/blessed, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in blessed water..."))
-		if(do_after(user, 3 SECONDS, target = src))
-			C.reagents.remove_reagent(/datum/reagent/water/blessed, 10)
-			medicine_quality = 0.2 //cheap, easy to get, doesn't even heal wounds if it's not on a bandage
-			medicine_amount += 20
-			desc += " It has been soaked in blessed water."
-			detail_color = "#6a9295"
-			update_icon()
-	if(C.reagents.has_reagent(/datum/reagent/water/medicine, 10) && !medicine_amount)
-		to_chat(user, span_notice("You start soaking the [src] in Pestran Medicine..."))
-		if(do_after(user, 3 SECONDS, target = src))
-			C.reagents.remove_reagent(/datum/reagent/water/medicine, 10)
-			medicine_quality = 0.6 //cheap yet not very common
-			medicine_amount += 30 // medicine_amount is equal to half the medication duration on a bandage, this will heal a total of 36 on a targeted area
-			desc += " It has been soaked in Pestran Medicine."
-			detail_color = "#428b42"
-			update_icon()
-
-/obj/item/natural/cloth/update_icon()
-	cut_overlays()
-	if(medicine_amount > 0)
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
-		pic.appearance_flags = RESET_COLOR
-		if(get_detail_color())
-			pic.color = get_detail_color()
-		add_overlay(pic)
-
-/obj/item/natural/cloth/proc/bandage(mob/living/M, mob/user)
-	var/used_time = bandage_speed
+/obj/item/ointment/proc/ointment(mob/living/M, mob/user)
+	var/used_time = treatment_speed
 	var/medskill = 0
 
 	if(ishuman(user))
@@ -139,20 +60,84 @@
 	var/obj/item/bodypart/affecting = H.get_bodypart(check_zone(user.zone_selected))
 	if(!affecting)
 		return
-	if(affecting.bandage)
-		to_chat(user, span_warning("There is already a bandage."))
+
+	if(!get_location_accessible(H,  check_zone(affecting)))
+		to_chat(user, span_warning("I need to see their [affecting] to heal it!"))
 		return
 
 	playsound(loc, 'sound/foley/bandage.ogg', 100, FALSE)
 	if(!move_after(user, used_time, target = M))
 		return
-	playsound(loc, 'sound/foley/bandage.ogg', 100, FALSE)
+	playsound(loc, 'modular/Neu_Food/sound/kneading_alt.ogg', 100, FALSE)
 
 	user.dropItemToGround(src)
-	affecting.try_bandage(src)
-	H.update_damage_overlays()
+	var/obj/item/bowl = new /obj/item/reagent_containers/glass/bowl (get_turf(user))
+	user.put_in_hands(bowl)
+	if(affecting && (affecting.heal_damage(burn, brute, required_status = BODYPART_ORGANIC)))
+		H.update_damage_overlays()
+	if(affecting && (affecting.heal_wounds(wound)))
+		H.update_damage_overlays()
 
 	if(M == user)
 		user.visible_message(span_notice("[user] bandages [user.p_their()] [affecting]."), span_notice("I bandage my [affecting.name]."))
 	else
 		user.visible_message(span_notice("[user] bandages [M]'s [affecting]."), span_notice("I bandage [M]'s [affecting.name]."))
+	qdel(src)
+
+/obj/item/ointment/brute
+	name = "calendula ointment"
+	icon_state = "ointment_brute"
+	desc = "WTF man?"
+	brute = 50
+	wound = 5
+
+/obj/item/ointment/brute/t2
+	name = "caleleaf ointment"
+	icon_state = "ointment_brute_2"
+	desc = "WTF man?"
+	brute = 100
+	burn = 20
+	wound = 10
+
+/obj/item/ointment/burn
+	name = "taraxacum ointment"
+	icon_state = "ointment_burn"
+	desc = "WTF man?"
+	burn = 50
+
+/obj/item/ointment/burn/t2
+	name = "taraxaleaf ointment"
+	icon_state = "ointment_burn_2"
+	desc = "WTF man?"
+	burn = 100
+	brute = 20
+
+/obj/item/ointment/wound
+	name = "leech ointment"
+	icon_state = "ointment_wound"
+	desc = "WTF man?"
+	wound = 50
+
+/obj/item/ointment/wound/t2
+	name = "caleechtar ointment"
+	icon_state = "ointment_wound_2"
+	desc = "WTF man?"
+	wound = 100
+	burn = 50
+	brute = 50
+
+/obj/item/storage/belt/rogue/pouch/t1_oint
+	populate_contents = list(
+	/obj/item/ointment/brute,
+	/obj/item/ointment/burn,
+	/obj/item/ointment/wound,
+	/obj/item/ointment/wound
+	)
+
+/obj/item/storage/belt/rogue/pouch/t2_oint
+	populate_contents = list(
+	/obj/item/ointment/brute/t2,
+	/obj/item/ointment/burn/t2,
+	/obj/item/ointment/wound/t2,
+	/obj/item/ointment/wound/t2
+	)

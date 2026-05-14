@@ -76,6 +76,11 @@
 				if(!recipient.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/diagnose/secular))
 					recipient.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 				recipient.mind?.special_items["Medicine Pouch"] = /obj/item/storage/belt/rogue/pouch/medicine
+				//TA edit start
+				recipient.mind?.special_items["Medicine Ointment Pouch"] = /obj/item/storage/belt/rogue/pouch/t2_oint
+				recipient.mind?.special_items["Utility Ointment Pouch (1)"] = /obj/item/storage/belt/rogue/pouch/t1_oint
+				recipient.mind?.special_items["Utility Ointment Pouch (2)"] = /obj/item/storage/belt/rogue/pouch/t1_oint
+				//TA edit end
 			if(SKILLED_FORESTER)
 				added_skills.Add(list(list(/datum/skill/craft/cooking, 2, 2)))
 				added_skills.Add(list(list(/datum/skill/misc/athletics, 2, 2)))

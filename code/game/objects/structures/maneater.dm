@@ -92,6 +92,8 @@
 		return
 	if(victim.m_intent == MOVE_INTENT_SNEAK)
 		return
+	if(HAS_TRAIT(user, DENDOR_BLESSING))
+		return
 
 	buckle_mob(victim, TRUE, check_loc = FALSE)
 	playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
