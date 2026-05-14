@@ -480,8 +480,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 /obj/effect/proc_holder/spell/invoked/transform_tree/miracle                  //
-	icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'       //
-	icon_state = "wood_emergence"                                             //
+	action_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
+	overlay_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
+	overlay_state = "wood_emergence"                                          //
+	icon_state = "wood_emergence"		                                      //
 	recharge_time = 60 SECONDS                                                //
 	associated_skill = /datum/skill/magic/druidic                             //
 	miracle = TRUE                                                            //
