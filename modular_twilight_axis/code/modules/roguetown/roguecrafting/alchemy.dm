@@ -120,5 +120,5 @@
 	result = list(/obj/item/ointment/wound/t2,
 					/obj/item/ointment/wound/t2,
 					/obj/item/ointment/wound/t2)
-	reqs = list(/obj/item/ash = 2, /obj/item/ointment/burn = 3, /obj/item/ash = 2)
+	reqs = list(/obj/item/ash = 2, /obj/item/ointment/burn = 3, /obj/item/ointment/wound = 3)
 	craftdiff = 2

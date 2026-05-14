@@ -87,7 +87,7 @@
 	for(var/obj/machinery/light/rogue/O in S.contents)
 		for(var/turf/open/T in range(1, get_turf(item)))
 			T.pollute_turf(cloud_reagent, 100, 200)
-		qdel(item)
+	qdel(item)
 
 /datum/pollutant/smoke
 	name = "Smoke"
@@ -107,4 +107,4 @@
 		if((3 / victim.wear_mask.gas_transfer_coefficient) >= amount)
 			return
 	if(amount > 3 && (amount / total_amount >= 0.25))
-		victim.reagents.add_reagent(reagent, 5)
+		victim.reagents?.add_reagent(reagent, 5)
