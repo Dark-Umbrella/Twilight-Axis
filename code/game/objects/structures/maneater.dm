@@ -75,8 +75,6 @@
 	var/mob/living/victim = AM
 	if(victim == planter)
 		return
-	if(!victim.ambushable())
-		return
 	if(victim.m_intent == MOVE_INTENT_SNEAK)
 		return
 	if(HAS_TRAIT(victim, DENDOR_BLESSING)) //TA Edit
