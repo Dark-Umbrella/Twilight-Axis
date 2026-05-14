@@ -275,11 +275,11 @@
 	return TRUE
 
 /datum/action/cooldown/spell/wood_emergence
-	button_icon = 'icons/mob/actions/mage_geomancy.dmi'
 	name = "Wood Emergence"
 	desc = "Command old tree to erupt from the earth, dealing heavy damage to anyone standing on the target and repelling everyone nearby back 1 pace.\
 	Deals 2x damage to structures. Can be self-cast - the caster is unharmed by their own eruption."
-	button_icon_state = "emergence"
+	button_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
+	button_icon_state = "wood_emergence"
 	sound = 'sound/ambience/noises/mystical (4).ogg'
 	spell_color = GLOW_COLOR_EARTHEN
 	glow_intensity = GLOW_INTENSITY_MEDIUM
@@ -417,10 +417,10 @@
 	new tree_type (T)
 
 /datum/action/cooldown/spell/create_maneater
-	button_icon = 'icons/mob/actions/roguespells.dmi'
 	name = "Create Maneater"
 	desc = "Creates a maneater. His size depends on the caster skill."
-	button_icon_state = "create_campfire"
+	button_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
+	button_icon_state = "create_maneater"
 	sound = 'sound/ambience/noises/mystical (4).ogg'
 
 	click_to_activate = TRUE
@@ -478,14 +478,16 @@
 
 	return TRUE
 
-////////////////////////////////////////////////////////////////////////
-/obj/effect/proc_holder/spell/invoked/transform_tree/miracle          //
-	recharge_time = 60 SECONDS                                        //
-	associated_skill = /datum/skill/magic/druidic                     //
-	miracle = TRUE                                                    //
-	devotion_cost = 100                                               //
-	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor     //
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/obj/effect/proc_holder/spell/invoked/transform_tree/miracle                  //
+	button_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'//
+	button_icon_state = "wood_emergence"                                      //
+	recharge_time = 60 SECONDS                                                //
+	associated_skill = /datum/skill/magic/druidic                             //
+	miracle = TRUE                                                            //
+	devotion_cost = 100                                                       //
+	req_items = /obj/item/clothing/neck/roguetown/psicross/dendor             //
+////////////////////////////////////////////////////////////////////////////////
 
 /obj/effect/proc_holder/spell/invoked/transform_tree/miracle/cast(list/targets, mob/user = usr)
 	var/mob/living/carbon/human/H = user

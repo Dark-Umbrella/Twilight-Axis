@@ -92,7 +92,7 @@
 		return
 	if(victim.m_intent == MOVE_INTENT_SNEAK)
 		return
-	if(HAS_TRAIT(user, DENDOR_BLESSING))
+	if(HAS_TRAIT(user, DENDOR_BLESSING)) //TA Edit
 		return
 
 	buckle_mob(victim, TRUE, check_loc = FALSE)
