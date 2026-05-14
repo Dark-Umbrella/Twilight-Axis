@@ -318,7 +318,19 @@
 	var/aoe_damage = 15
 	var/npc_simple_damage_mult = 2
 	var/push_dist = 1
-	var/pillar_integrity = 150
+
+	var/static/list/turf_whitelist = list(
+		/turf/open/floor/rogue/dirt,
+		/turf/open/floor/rogue/dirt/road,
+		/turf/open/floor/rogue/dirt/ambush,
+		/turf/open/floor/rogue/grass,
+		/turf/open/floor/rogue/grasscold,
+		/turf/open/floor/rogue/snow,
+		/turf/open/floor/rogue/snowrough,
+		/turf/open/floor/rogue/snowpatchy,
+		/turf/open/floor/rogue/AzureSand,
+		/turf/open/floor/rogue/sand
+		)
 
 /datum/action/cooldown/spell/wood_emergence/cast(atom/cast_on)
 	. = ..()
@@ -347,6 +359,10 @@
 		if(S.density)
 			to_chat(H, span_warning("Something is already there!"))
 			return FALSE
+	
+	if(!is_type_in_list(target, turf_whitelist))
+		to_chat(owner, span_warning("This turf can't be on fiyaaaah! (It's blocked sire.)"))
+		return FALSE
 
 	new /obj/effect/temp_visual/trap/emergence(T)
 	playsound(T, 'sound/foley/footsteps/armor/woodarmor (1).ogg', 60, TRUE)
