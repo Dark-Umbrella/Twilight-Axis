@@ -80,8 +80,10 @@
 		return
 	if(victim.m_intent == MOVE_INTENT_SNEAK)
 		return
-	if(HAS_TRAIT(victim, DENDOR_BLESSING)) //TA Edit
+	if(HAS_TRAIT(victim, DENDOR_BLESSING)) //TA Edit Start
 		return
+	if((HAS_TRAIT(victim, TRAIT_AZURENATIVE) && victim.m_intent != MOVE_INTENT_RUN))
+		return //TA Edit End
 
 	if(!aggroed)
 		START_PROCESSING(SSobj, src)
