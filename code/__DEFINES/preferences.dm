@@ -124,7 +124,14 @@
 #define AGE_MIDDLEAGED		"Middle-Aged"
 #define AGE_OLD				"Old"
 
-#define ALL_AGES_LIST list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
+//TA Edit Start
+#define AGE_IMMORTAL		"Immortal"
+
+#define AASIMAR_AGES_LIST list(AGE_IMMORTAL)
+#define NOT_AASIMAR_AGES_LIST list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
+
+#define ALL_AGES_LIST list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD, AGE_IMMORTAL)
+//TA Edit End
 
 //Voice ranges
 #define MIN_VOICE_PITCH		0.8

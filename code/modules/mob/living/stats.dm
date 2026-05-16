@@ -75,6 +75,13 @@
 				change_stat(STATKEY_CON, -2)
 				change_stat(STATKEY_INT, 2)
 				change_stat(STATKEY_LCK, 1)
+//TA Edit Start
+			if(AGE_IMMORTAL)
+				change_stat(STATKEY_CON, -1)
+				change_stat(STATKEY_WIL, -1)
+				change_stat(STATKEY_INT, 2)
+				change_stat(STATKEY_LCK, 2)
+//TA Edit End
 		if(key)
 			if(check_blacklist(ckey(key)))
 				change_stat(STATKEY_STR, -5)

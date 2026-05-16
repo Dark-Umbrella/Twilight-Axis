@@ -1,5 +1,5 @@
 /datum/species/elf/wood
-	race_bonus = list()
+	race_bonus = list(TRAIT_WEBWALK, TRAIT_LIGHT_STEP)
 	custom_selection = list(
 		"+1 SPD, +1 INT" = list(STAT_SPEED = 1, STAT_INTELLIGENCE = 1),
 		"Azurean Native (Force Origin, No Ambush if not Run)" = list(TRAIT_AZURENATIVE, /datum/virtue/origin/azuria),

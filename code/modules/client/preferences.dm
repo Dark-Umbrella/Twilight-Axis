@@ -1843,6 +1843,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 								to_chat(user, "Muscles ache and joints begin to slow as Aeon's grasp begins to settle upon your shoulders. (-1 SPD, +1 WIL +1 FOR)")
 							if (AGE_OLD)
 								to_chat(user, "In a place as lethal as PSYDONIA, the elderly are all but marvels... or beneficiaries of the habitually privileged. (-1 STR, -2 SPE, -1 PER, -2 CON, +2 INT, +1 FOR)")
+//TA Edit Start
+							if (AGE_IMMORTAL)
+								to_chat(user, "You are an immortal being. It doesn't matter when you were born, a couple of daes ago, or long before the rise of most gods - the gods whisper in your ears, and luck always accompanies you. (-1 CON, -1 WIL, +2 INT, +2 FOR)")
+//TA Edit End
 						// LETHALSTONE EDIT END
 						ResetJobs()
 						to_chat(user, "<font color='red'>Classes reset.</font>")

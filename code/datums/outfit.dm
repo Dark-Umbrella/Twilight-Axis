@@ -238,6 +238,13 @@
 		else
 			WARNING("Unable to equip accessory [accessory] in outfit [name]. No uniform present!")
 
+//TA Edit Start
+	var/obj/item/bodypart/taur/taur = H.get_taur_tail()
+	if(taur)
+		if(!istype(taur, /obj/item/bodypart/taur/goat))
+			ADD_TRAIT(H, TRAIT_MOUNTABLE, TRAIT_GENERIC)
+//TA Edit End
+
 	if(!visualsOnly)
 		// gives a 50/50 chance for hands to be swapped
 		if(prob(50))

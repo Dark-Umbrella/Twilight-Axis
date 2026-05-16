@@ -1,5 +1,6 @@
 /datum/species/aasimar
 	inherent_traits = list(TRAIT_SILVER_BLESSED, TRAIT_ZOMBIE_IMMUNE, TRAIT_UNLYCKERABLE, TRAIT_NOHUNGER)
+	possible_ages = AASIMAR_AGES_LIST
 	custom_selection = list(
 		"+1 FOR" = STATKEY_LCK,
 		"+1 INT" = STATKEY_INT,

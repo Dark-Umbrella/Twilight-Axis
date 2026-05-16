@@ -118,14 +118,6 @@
 	desc = "Astrata blinding me! I should wait out this hell underground!"
 	icon_state = "debuff"
 
-/*/datum/virtue/utility/azurenative
-	name = "Azurean Native (Racial, Elf)"
-	desc = "This Virtue is unlisted and should not be visible."
-	unlisted = TRUE
-
-/datum/virtue/utility/azurenative/apply_to_human(mob/living/carbon/human/recipient, client/player)
-	change_origin(recipient, /datum/virtue/origin/azuria, "Azurean Native")*/
-
 /datum/virtue/utility/harmony
 	name = "Harmony (Racial, Elf)"
 	desc = "This Virtue is unlisted and should not be visible."
@@ -144,7 +136,7 @@
 		UnregisterSignal(H, COMSIG_MOB_ATTACKED_BY_HAND)
 		H.faction -= "wildlife"
 		H.faction -= "wolfs"
-		sleep(30 SECONDS)
+		sleep(1 MINUTES)
 		harmony_return(H)
 
 /datum/virtue/utility/harmony/proc/harmony_return(mob/user)
