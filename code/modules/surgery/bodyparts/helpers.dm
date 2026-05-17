@@ -278,6 +278,15 @@
 	T.taur_color = color
 	T.attach_limb(src)
 
+//TA Edit Start
+	if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		var/obj/item/bodypart/taur/taur = H.get_taur_tail()
+		if(taur)
+			if(!istype(taur, /obj/item/bodypart/taur/goat))
+				ADD_TRAIT(H, TRAIT_MOUNTABLE, TRAIT_GENERIC)
+//TA Edit End
+
 	if(shoes)
 		dropItemToGround(shoes)
 
