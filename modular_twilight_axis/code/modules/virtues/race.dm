@@ -136,16 +136,16 @@
 		UnregisterSignal(H, COMSIG_MOB_ATTACKED_BY_HAND)
 		H.faction -= "wildlife"
 		H.faction -= "wolfs"
-		sleep(1 MINUTES)
-		harmony_return(H)
+		addtimer(CALLBACK(src, PROC_REF(harmony_return), H), 1 MINUTES)
 
 /datum/virtue/utility/harmony/proc/harmony_return(mob/user)
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		to_chat(H, span_warning("My beast harmony returns!"))
-		H.faction += "wildlife"
-		H.faction += "wolfs"
-		RegisterSignal(H, COMSIG_MOB_ITEM_ATTACK, PROC_REF(harmony_ruin))
-		RegisterSignal(H, COMSIG_MOB_ITEM_BEING_ATTACKED, PROC_REF(harmony_ruin))
-		RegisterSignal(H, COMSIG_MOB_ITEM_POST_SWINGDELAY_ATTACKED, PROC_REF(harmony_ruin))
-		RegisterSignal(H, COMSIG_MOB_ATTACKED_BY_HAND, PROC_REF(harmony_ruin))
+	if(!user || QDELETED(user) || !ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	to_chat(H, span_warning("My beast harmony returns!"))
+	H.faction += "wildlife"
+	H.faction += "wolfs"
+	RegisterSignal(H, COMSIG_MOB_ITEM_ATTACK, PROC_REF(harmony_ruin))
+	RegisterSignal(H, COMSIG_MOB_ITEM_BEING_ATTACKED, PROC_REF(harmony_ruin))
+	RegisterSignal(H, COMSIG_MOB_ITEM_POST_SWINGDELAY_ATTACKED, PROC_REF(harmony_ruin))
+	RegisterSignal(H, COMSIG_MOB_ATTACKED_BY_HAND, PROC_REF(harmony_ruin))
