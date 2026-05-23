@@ -79,6 +79,17 @@
 /atom/movable/screen/skills/Click(location, control, params)
 	var/list/modifiers = params2list(params)
 
+	if(modifiers["middle"])
+		if(ishuman(usr))
+			var/mob/living/carbon/human/H = usr
+		
+			if(H.get_skill_level(/datum/skill/combat/bows) < SKILL_LEVEL_EXPERT)
+				return
+		
+			var/datum/archery_perk_menu/menu = new(H)
+			menu.ui_interact(H)
+		return
+
 	if(modifiers["right"])
 		var/ht
 		var/mob/living/L = usr
@@ -1874,7 +1885,7 @@
 				state2use = "stress"
 			if(5 to 14)
 				state2use = "stress2"
-			if(5 to 24)
+			if(15 to 24)
 				state2use = "stress3"
 			if(25 to 999)
 				state2use = "stress4"
