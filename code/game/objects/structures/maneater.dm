@@ -102,6 +102,19 @@
 	if(!(has_buckled_mobs() && victim.buckled))
 		return
 
+	buckle_mob(victim, TRUE, check_loc = FALSE)
+	playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
+	visible_message(span_userdanger("[src] begins to gnaw on [victim]! RESIST as many times as possible, or risk being chewed apart!"))
+	addtimer(CALLBACK(src, PROC_REF(begin_eat), victim), 3 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
+
+/obj/structure/flora/roguegrass/maneater/real/proc/begin_eat(mob/living/victim, chew_factor = 1)
+	if(!victim || QDELETED(victim))
+		return
+	if(victim.loc != loc)
+		return
+	if(!(has_buckled_mobs() && victim.buckled))
+		return
+
 	visible_message(span_userdanger("[src] gnaws on [victim]!"))
 	playsound(src, 'sound/misc/eat.ogg', rand(30,60), TRUE)
 
