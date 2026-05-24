@@ -93,7 +93,7 @@
 	result = list(/obj/item/ointment/burn,
 					/obj/item/ointment/burn,
 					/obj/item/ointment/burn)
-	reqs = list(/obj/item/ash = 2, /obj/item/alch/taraxacum = 2, /obj/item/alch/viscera = 3, /obj/item/reagent_containers/glass/bowl = 3)
+	reqs = list(/obj/item/ash = 2, /obj/item/alch/taraxacum = 2, /obj/item/alch/viscera = 2, /obj/item/reagent_containers/glass/bowl = 3)
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/alchemy/ointment_burn_two
@@ -111,7 +111,7 @@
 	result = list(/obj/item/ointment/wound,
 					/obj/item/ointment/wound,
 					/obj/item/ointment/wound)
-	reqs = list(/obj/item/ointment/brute = 3, /obj/item/natural/worms/leech = 2, /datum/reagent/water = 24, /obj/item/reagent_containers/glass/bowl = 3)
+	reqs = list(/obj/item/ointment/brute = 3, /obj/item/natural/worms/leech = 2, /datum/reagent/water = 24)
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/alchemy/ointment_wound_two

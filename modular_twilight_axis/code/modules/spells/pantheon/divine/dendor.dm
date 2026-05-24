@@ -280,6 +280,7 @@
 	Deals 2x damage to structures. Can be self-cast - the caster is unharmed by their own eruption."
 	button_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
 	button_icon_state = "wood_emergence"
+	overlay_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
 	sound = 'sound/ambience/noises/mystical (4).ogg'
 	spell_color = GLOW_COLOR_EARTHEN
 	glow_intensity = GLOW_INTENSITY_MEDIUM
@@ -359,8 +360,8 @@
 		if(S.density)
 			to_chat(H, span_warning("Something is already there!"))
 			return FALSE
-	
-	if(!is_type_in_list(target, turf_whitelist))
+
+	if(!is_type_in_list(T, turf_whitelist))
 		to_chat(owner, span_warning("This turf is not natural; nothing can grow on it! (It's blocked sire.)"))
 		return FALSE
 
@@ -436,6 +437,7 @@
 	name = "Create Maneater"
 	desc = "Creates a maneater. His size depends on the caster skill."
 	button_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
+	overlay_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
 	button_icon_state = "create_maneater"
 	sound = 'sound/ambience/noises/mystical (4).ogg'
 

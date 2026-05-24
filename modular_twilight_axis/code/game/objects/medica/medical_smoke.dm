@@ -97,6 +97,7 @@
 	scent = ""
 	color = "#bebebe"
 	var/reagent = null
+	var/reagent_count = 5
 
 /datum/pollutant/smoke/breathe_act(mob/living/carbon/victim, amount, total_amount)
 	. = ..()
@@ -106,5 +107,7 @@
 			return
 		if((3 / victim.wear_mask.gas_transfer_coefficient) >= amount)
 			return
+	if(reagent == /datum/reagent/ozium)
+		reagent_count = 1
 	if(amount > 3 && (amount / total_amount >= 0.25))
-		victim.reagents?.add_reagent(reagent, 5)
+		victim.reagents?.add_reagent(reagent, reagent_count)
