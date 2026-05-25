@@ -87,14 +87,14 @@
 /obj/item/ointment/brute
 	name = "calendula ointment"
 	icon_state = "ointment_brute"
-	desc = "WTF man?"
+	desc = "Gelatinous mass of distilled viscera, ashes and calendula extract. Heals bruises, relieves swelling and other brute injuries."
 	brute = 50
 	wound = 5
 
 /obj/item/ointment/brute/t2
 	name = "caleleaf ointment"
 	icon_state = "ointment_brute_2"
-	desc = "WTF man?"
+	desc = "A mixture of viscera, calendula, and marsh leaf extract elements with additives of pure ground salt. It has truly magical healing properties, expelling hematomas and relieving internal injuries. As a side effect, it also heals minor burns."
 	brute = 100
 	burn = 20
 	wound = 10
@@ -102,26 +102,26 @@
 /obj/item/ointment/burn
 	name = "taraxacum ointment"
 	icon_state = "ointment_burn"
-	desc = "WTF man?"
+	desc = "An oily thick liquid made from distilled viscera and taraxium extract. It has healing properties, relieving burns on the extremity."
 	burn = 50
 
 /obj/item/ointment/burn/t2
 	name = "taraxaleaf ointment"
 	icon_state = "ointment_burn_2"
-	desc = "WTF man?"
+	desc = "A mass of a mixture of viscera, taraxium extract, to which dried westeleaf and pure salt were added. Cleanses dead flesh from fresh burns, completely miraculously sealing them. As a side effect, it will get rid of calluses and other minor rough damages."
 	burn = 100
 	brute = 20
 
 /obj/item/ointment/wound
 	name = "leech ointment"
 	icon_state = "ointment_wound"
-	desc = "WTF man?"
+	desc = "A modified ointment formula based on calendula extract, with a squeeze of marsh leech. It seals bleeding wounds, fuses minor fractures and ruptured arteries. It is believed that her formula is a gift from Pestra to gifted alchemists and doctors."
 	wound = 50
 
 /obj/item/ointment/wound/t2
 	name = "caleechtar ointment"
 	icon_state = "ointment_wound_2"
-	desc = "WTF man?"
+	desc = "A blessed ointment based on leech extract, with the addition of taraxium. The perfect apotheosis of field medicine, sent down by the martyr goddess. Heals any wound on a limb in a miraculous way, healing abrasions and burns as a side effect."
 	wound = 100
 	burn = 50
 	brute = 50

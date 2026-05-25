@@ -325,6 +325,8 @@
 		/turf/open/floor/rogue/dirt/road,
 		/turf/open/floor/rogue/dirt/ambush,
 		/turf/open/floor/rogue/grass,
+		/turf/open/floor/rogue/grassyel,
+		/turf/open/floor/rogue/grassred,
 		/turf/open/floor/rogue/grasscold,
 		/turf/open/floor/rogue/snow,
 		/turf/open/floor/rogue/snowrough,
@@ -471,6 +473,8 @@
 		/turf/open/floor/rogue/dirt/road,
 		/turf/open/floor/rogue/dirt/ambush,
 		/turf/open/floor/rogue/grass,
+		/turf/open/floor/rogue/grassyel,
+		/turf/open/floor/rogue/grassred,
 		/turf/open/floor/rogue/grasscold,
 		/turf/open/floor/rogue/snow,
 		/turf/open/floor/rogue/snowrough,
@@ -489,7 +493,12 @@
 		to_chat(owner, span_warning("This turf is not natural; nothing can grow on it! (It's blocked sire.)"))
 		return FALSE
 
-	if(skill > 4 || skill_second > 4) //druid master or miracle master
+	for(var/obj/structure/S in target.contents)
+		if(istype(S, /obj/structure/flora/roguegrass/maneater/real))
+			to_chat(owner, span_warning("Something is already there!"))
+			return FALSE
+
+	if(skill > 3 || skill_second > 1) //druid apprenties or miracle expert
 		new /obj/structure/flora/roguegrass/maneater/real(target)
 	else
 		new /obj/structure/flora/roguegrass/maneater/real/juvenile(target)
