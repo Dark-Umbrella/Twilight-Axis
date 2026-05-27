@@ -70,3 +70,9 @@
 	item_state = "shadowboots"
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	smeltresult = /obj/item/ingot/drow
+
+/obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/Initialize()
+	. = ..()
+	smeltresult = /obj/item/ingot/iron
+
+
