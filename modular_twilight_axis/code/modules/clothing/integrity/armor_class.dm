@@ -1,10 +1,14 @@
-/obj/item/clothing/Initialize()
+/obj/item/clothing/shoes/roguetown/boots/armor/Initialize()
 	. = ..()
+	if(smeltresult)
+		armor_class = ARMOR_CLASS_MEDIUM
 
-	if(!armor)
-		return
+/obj/item/clothing/gloves/roguetown/plate/Initialize()
+	. = ..()
+	if(smeltresult)
+		armor_class = ARMOR_CLASS_MEDIUM
 
-	if(istype(src, /obj/item/clothing/shoes/roguetown/boots/armor) || istype(src, /obj/item/clothing/gloves/roguetown/plate) || istype(src, /obj/item/clothing/wrists/roguetown/bracers))
-		if(!smeltresult)
-			return
+/obj/item/clothing/wrists/roguetown/bracers/Initialize()
+	. = ..()
+	if(smeltresult)
 		armor_class = ARMOR_CLASS_MEDIUM

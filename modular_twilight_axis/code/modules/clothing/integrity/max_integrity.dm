@@ -11,17 +11,17 @@
 
 /obj/item/clothing/shoes/roguetown/Initialize()
 	. = ..()
-	if(istype(src.smeltresult, /obj/item/ingot) || smeltresult == /obj/item/rogueore/coal)
+	if(ispath(src.smeltresult, /obj/item/ingot) || smeltresult == /obj/item/rogueore/coal)
 		return
 
-	var/list/tier_two_boots = list(
+	var/static/list/tier_two_boots = list(
 		/obj/item/clothing/shoes/roguetown/shalal,
 		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced,
 		/obj/item/clothing/shoes/roguetown/boots/furlinedboots,
 		/obj/item/clothing/shoes/roguetown/boots/furlinedanklets
 	)
 
-	var/list/tier_three_boots = list(
+	var/static/list/tier_three_boots = list(
 		/obj/item/clothing/shoes/roguetown/boots/psydonboots,
 		/obj/item/clothing/shoes/roguetown/boots/otavan,
 		/obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter,
@@ -33,37 +33,20 @@
 	for(var/type_path in tier_two_boots)
 		if(istype(src, type_path))
 			armor = getArmor(blunt = DBLOCK_HEAVY, slash = DBLOCK_HEAVY, stab = DBLOCK_MEDIUM, piercing = DBLOCK_MEDIUM, fire = DR_NONE, acid = DR_NONE, magic = 0, bullet = DR_NONE)
-			max_integrity = 120 //240 x2
-			integrity_fix()
+			max_integrity = 240
+			obj_integrity = 240
 			return
 
 	for(var/type_path in tier_three_boots)
 		if(istype(src, type_path))
 			armor = getArmor(blunt = DR_SUPER, slash = DBLOCK_HEAVY, stab = DBLOCK_HEAVY, piercing = DBLOCK_HEAVY, fire = DR_MEDIUM, acid = DR_NONE, magic = 0, bullet = DR_LIGHT)
-			max_integrity = 160 //320 x2
-			integrity_fix()
+			max_integrity = 320
+			obj_integrity = 320
 			return
 
 	armor = getArmor(blunt = DR_MEDIUM, slash = DBLOCK_MEDIUM, stab = DBLOCK_MEDIUM, piercing = DBLOCK_LIGHT, fire = DR_NONE, acid = DR_NONE, magic = 0, bullet = DR_NONE)
-	max_integrity = 80 //160 x2
-	integrity_fix()
-
-/obj/item/clothing/shoes/roguetown/proc/integrity_fix()
-	if(!armor)
-		return
-
-	if(!max_integrity)
-		return
-
-	var/old_max = max_integrity
-	var/old_obj = obj_integrity
-
-	max_integrity = round(old_max * TA_MAX_INTEGRITY_MULTIPLIER)
-
-	obj_integrity = round(old_obj * TA_MAX_INTEGRITY_MULTIPLIER)
-
-	if(obj_integrity > max_integrity)
-		obj_integrity = max_integrity
+	max_integrity = 160
+	obj_integrity = 160
 
 /obj/item/clothing/Initialize()
 	. = ..()

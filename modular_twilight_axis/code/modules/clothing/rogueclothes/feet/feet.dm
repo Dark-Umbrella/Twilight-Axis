@@ -71,8 +71,7 @@
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	smeltresult = /obj/item/ingot/drow
 
-/obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/Initialize()
-	. = ..()
+/obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
 	smeltresult = /obj/item/ingot/iron
 
 

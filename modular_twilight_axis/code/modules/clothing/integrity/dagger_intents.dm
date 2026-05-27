@@ -13,7 +13,7 @@
 	blade_class = BCLASS_PICK
 	penfactor = PEN_HEAVY //Reduce piercing from requested 4 -> 3.
 
-/datum/intent/dagger/lungeTA
+/datum/intent/dagger/thrust/lungeTA
 	name = "deep lunge"
 	icon_state = "inlunge"
 	swingdelay_type = SWINGDELAY_CANCELSLOW
@@ -24,6 +24,4 @@
 	penfactor = PEN_BSTEEL
 	damfactor = 1.1
 
-/obj/item/rogueweapon/huntingknife/idagger/Initialize()
-	. = ..()
-	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/thrust/pick/pickTA, /datum/intent/dagger/lungeTA, /datum/intent/dagger/cut)
+/obj/item/rogueweapon/huntingknife/idagger/possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/thrust/pick/pickTA, /datum/intent/dagger/thrust/lungeTA, /datum/intent/dagger/cut)
