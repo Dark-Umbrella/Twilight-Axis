@@ -209,10 +209,7 @@
 		if(owner.cmode)
 			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
-		if(HAS_TRAIT(owner, TRAIT_
-    
-    
-    MAN))
+		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
 			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)

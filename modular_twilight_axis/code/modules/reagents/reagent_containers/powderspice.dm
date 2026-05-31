@@ -161,7 +161,7 @@
 	if(M.cmode)
 		M.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
 		return
-	if(M.construct)
+	if(HAS_TRAIT(M, TRAIT_IRONMAN))
 		M.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
 		return
 	narcolepsy_drug_up(M)
