@@ -66,6 +66,28 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 	return null
 
+/proc/get_donator_triumph_discount(key)
+	key = ckey(key)
+	if(!key)
+		return 0
+
+	switch(check_patreon_lvl(key))
+		if(1)
+			return 3
+		if(2)
+			return 5
+		if(3)
+			return 7
+		if(4)
+			return 10
+		if(5)
+			return 15
+
+	if(is_donator(key))
+		return 3
+
+	return 0
+
 //Miscellaneous
 
 /datum/loadout_item/card_deck
@@ -1322,7 +1344,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/triumph_foldtable
 	name = "Folding Table"
-	path = /obj/structure/table/wood/folding
+	path = /obj/item/folding_table_stored
 	category = list("Триумфы")
 	triumph_cost = 5
 
@@ -1967,6 +1989,20 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Donator Kit - Sylvan Sabre - Required: Sabre"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/nero_sabre
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/des_gaebolg
+	name = "Dontaor Kit - Gae Bolg - Required: Spear, Partizan, Halberd, Glaive Or Eagle's Beak"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/des_gaebolg
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/arra_amdir
+	name = "Dontaor Kit - Amdir - Required: Greataxe"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/arra_amdir
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -2629,6 +2665,20 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/duelcape
 	donatitem = TRUE
+
+/datum/loadout_item/donat/cloak_jinbaori
+	name = "Jinbaori"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/kazengun
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator_vakiova
+	name = "Donator Item - Gravetender Coat"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/vaki_gravetender
+	donatitem = TRUE
+	donat_tier = 2
 
 // Маски
 

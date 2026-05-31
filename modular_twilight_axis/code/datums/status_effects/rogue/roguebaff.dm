@@ -209,7 +209,10 @@
 		if(owner.cmode)
 			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
-		if(owner.construct)
+		if(HAS_TRAIT(owner, TRAIT_
+    
+    
+    MAN))
 			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)
@@ -219,7 +222,7 @@
 		if(owner.cmode)
 			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
-		if(owner.construct)
+		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
 			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
