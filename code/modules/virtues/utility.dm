@@ -1,8 +1,9 @@
 /datum/virtue/utility/noble
-	name = "Nobility"
+	name = "Nobility (-5 TRI)"
 	desc = "By birth, blade or brain, I am noble known to the royalty of these lands, and have all the benefits associated with it. I've cleverly stashed away a healthy amount of coinage, alongside a familial heirloom."
 	restricted = TRUE
 	max_choices = 1
+	triumph_cost = 5
 	races = list(/datum/species/construct, /datum/species/dullahan)
 	added_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))
@@ -73,6 +74,9 @@
 			if(NOTABLE_BEAUTY)
 				ADD_TRAIT(recipient, TRAIT_BEAUTIFUL, TRAIT_VIRTUE)
 				ADD_TRAIT(recipient, TRAIT_GOODLOVER, TRAIT_VIRTUE)
+				if(isdullahan(recipient))
+					REMOVE_TRAIT(recipient, TRAIT_BEAUTIFUL, TRAIT_VIRTUE)
+					ADD_TRAIT(recipient, TRAIT_BEAUTIFUL_UNCANNY, TRAIT_VIRTUE)
 				recipient.mind?.special_items["Hand Mirror"] = /obj/item/handmirror
 			if(NOTABLE_STASH)
 				recipient.mind?.special_items["Weighty Coinpurse"] = /obj/item/storage/belt/rogue/pouch/coins/virtuepouch
@@ -229,7 +233,7 @@
 					if(recipient.has_flaw(/datum/charflaw/colorblind))
 						to_chat(recipient, "Your eyes have become permanently colorblind.")
 					else if(recipient.charflaws.len)
-						recipient.verbs += /mob/living/carbon/human/proc/toggleblindness
+						add_verb(recipient, /mob/living/carbon/human/proc/toggleblindness)
 			else if(ispath(extra_choices[choice], /datum/skill))
 				if(extra_choices[choice] == /datum/skill/misc/sneaking)
 					recipient.adjust_skillrank(extra_choices[choice], SKILL_LEVEL_APPRENTICE, silent = TRUE)
@@ -239,8 +243,8 @@
 				var/obj/item/I = extra_choices[choice]
 				recipient.mind?.special_items[capitalize(I::name)] = extra_choices[choice]
 			else if(choice == "Second Voice")
-				recipient.verbs += /mob/living/carbon/human/proc/changevoice
-				recipient.verbs += /mob/living/carbon/human/proc/swapvoice
+				add_verb(recipient, /mob/living/carbon/human/proc/changevoice)
+				add_verb(recipient, /mob/living/carbon/human/proc/swapvoice)
 				recipient.AddComponent(/datum/component/voice_handler)
 
 /datum/virtue/utility/performer
@@ -374,11 +378,6 @@
 	name = "Defiled Keyholder"
 	desc = "The 'Holy' See has their blood-stained grounds, and so do we. Underneath their noses, we pray to the true gods - I know the location of the local heretic conclave. Secrecy is paramount. If found out, I will surely be killed."
 	added_traits = list(TRAIT_ZURCH)
-
-/datum/virtue/utility/mountable
-	name = "Mountable"
-	desc = "You have trained and become fit enough to function as a suitable mount. People may ride you as they would a saiga."
-	added_traits = list(TRAIT_MOUNTABLE)
 
 // AUTHOR NOTE - Probably remove this from court, leader and inquisition roles later since the barrier to roleplaying this correctly as those roles is extremely high.
 // Mostly meant as a virtue for strange fey creatures, or people roleplaying as if they have been influenced by hags positively in the past, following an active pact to avoid vengeance.

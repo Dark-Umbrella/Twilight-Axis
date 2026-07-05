@@ -209,12 +209,13 @@
 
 	charge_required = TRUE
 	charge_time = 1 SECONDS
-	charge_drain = 3
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/holycharging.ogg'
 	cooldown_time = 1 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+	ignore_combat_tag = TRUE
 
 /datum/action/cooldown/spell/noc/invisibility/cast(atom/cast_on)
 	. = ..()
@@ -259,6 +260,7 @@
 	antimagic_allowed = TRUE
 	hide_charge_effect = TRUE
 	cost = 3 // Very useful
+	ignore_combat_tag = TRUE
 
 /obj/effect/proc_holder/spell/invoked/invisibility/cast(list/targets, mob/living/user)
 	if(isliving(targets[1]))
@@ -306,7 +308,6 @@
 
 	charge_required = TRUE
 	charge_time = 1 SECONDS
-	charge_drain = 3
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/holycharging.ogg'
 	cooldown_time = 1.5 MINUTES
@@ -383,7 +384,6 @@
 
 	charge_required = TRUE
 	charge_time = 1 SECONDS
-	charge_drain = 3
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/holycharging.ogg'
 	cooldown_time = 1 MINUTES
@@ -438,30 +438,27 @@
 /datum/action/cooldown/spell/noc/spellpack
 	name = "Arcyne Affinity"
 	desc = "Allows you to learn a set of spells. \n \
-	<b>MAGISTER</b>: Greater Arcyne Force Wall, Arcyne Ward, Blink, Message, Create Campfire \n \
-	<b>ENCHANTER</b>: Gravel Blast, Dragon Hide, Mending, Arcyne Forge, Hawk Eyes, Stoneskin\n \
-	<b>SEER</b>: Crystal Hide, Giants Strength, Guidance, Haste, Fortitude, Mindlink"
+	<b>MAGISTER</b>: Greater Arcyne Bolt, Forcewall, Arcyne Ward, Phase, Message, Create Campfire \n \
+	<b>ENCHANTER</b>: Gravel Blast, Dragonhide Ward, Mending, Arcyne Forge, Hawk's Eyes, Stoneskin\n \
+	<b>SEER</b>: Crystalhide Ward, Giant's Strength, Guidance, Haste, Fortitude, Mindlink"
 	button_icon_state = "spellpack"
 
 	click_to_activate = FALSE
-
 	primary_resource_cost = SPELLCOST_MIRACLE
-
 	secondary_resource_cost = SPELLCOST_UTILITY_BUFF
-
 	invocation_type = INVOCATION_NONE
-
 	charge_required = FALSE
 	cooldown_time = 5 SECONDS
-
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
+	/// var we use to flag we are currently choosing a bundle.
+	var/choosing_bundle = FALSE
 	var/chosen_bundle
 	var/list/magister_bundle = list(
 		/datum/action/cooldown/spell/projectile/greater_arcyne_bolt, //Offensive Tool
 		/datum/action/cooldown/spell/forcewall,
 		/datum/action/cooldown/spell/conjure_arcyne_ward,
-		/datum/action/cooldown/spell/blink,
+		/datum/action/cooldown/spell/phase,
 		/datum/action/cooldown/spell/message, //Utility
 		/datum/action/cooldown/spell/create_campfire //Buff
 	)
@@ -470,24 +467,30 @@
 		/datum/action/cooldown/spell/conjure_arcyne_ward/dragonhide,
 		/datum/action/cooldown/spell/mending,
 		/datum/action/cooldown/spell/arcyne_forge, //Utility
-		/datum/action/cooldown/spell/hawks_eyes,
-		/datum/action/cooldown/spell/stoneskin //Buff
+		/datum/action/cooldown/spell/augment_buff/attune_hawk,
+		/datum/action/cooldown/spell/augment_buff/stoneskin //Buff
 	)
 	var/list/seer_bundle = list(
 		/datum/action/cooldown/spell/conjure_arcyne_ward/crystalhide,
-		/datum/action/cooldown/spell/giants_strength,
-		/datum/action/cooldown/spell/guidance,
-		/datum/action/cooldown/spell/haste,
-		/datum/action/cooldown/spell/fortitude,
+		/datum/action/cooldown/spell/augment_buff/attune_giant,
+		/datum/action/cooldown/spell/augment_buff/guidance,
+		/datum/action/cooldown/spell/augment_buff/attune_haste,
+		/datum/action/cooldown/spell/augment_buff/fortitude,
 		/datum/action/cooldown/spell/mindlink
 	)
 
 /datum/action/cooldown/spell/noc/spellpack/cast(atom/cast_on)
 	. = ..()
+
+	if(choosing_bundle)
+		return FALSE
 	var/choice = chosen_bundle
 	if(!chosen_bundle)
+		choosing_bundle = TRUE
 		choice = alert(owner, "What type of spells has Noc blessed you with?", "CHOOSE PATH", "Magister", "Enchanter", "Seer")
 		chosen_bundle = choice
+		choosing_bundle = FALSE
+
 	switch(choice)
 		if("Magister")
 			add_spells(owner, magister_bundle, grant_all = TRUE)
@@ -501,8 +504,7 @@
 			add_spells(owner, seer_bundle, grant_all = TRUE)
 			owner.mind?.RemoveSpell(src.type)
 			return TRUE
-		else
-			return FALSE
+	return FALSE
 
 /datum/action/cooldown/spell/noc/spellpack/proc/add_spells(mob/owner, list/spells, choice_count = 1, grant_all = FALSE)
 	for(var/spell_type in spells)
@@ -549,12 +551,13 @@
 	invocations = list("Deepest dreaming, scribe!")
 
 	charge_required = FALSE
-	cooldown_time = 45 MINUTES
+	cooldown_time = 1 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/points_need = 10
 	var/alreadychoosing = FALSE
+	var/last_dreamcost = 0
 
 /datum/action/cooldown/spell/noc/grimoire/cast(mob/living/carbon/human/user)
 	if(alreadychoosing)
@@ -564,13 +567,11 @@
 	alreadychoosing = TRUE
 
 	. = ..()
-	// commentened out until someone fixes the cooldown code. 
-	/*
+
 	if(GLOB.tod == "day" || GLOB.tod == "dawn")
 		to_chat(user, span_warning("ASTRATA IS RISEN! MY SPELL FIZZLES!"))
-		revert_cast()
 		alreadychoosing = FALSE
-		return FALSE*/
+		return FALSE
 
 	var/feather_check = FALSE
 
@@ -641,17 +642,23 @@
 		for(var/obj/item/burn in books_burnt)
 			new /obj/effect/temp_visual/moon/spell(get_turf(burn))
 			qdel(burn)
-		user.mind.sleep_adv.sleep_adv_points -= item.dreamcost
-/*		if(item.dreamcost == 3) // this doesnt fucking work. our code doesnt allow for custom recharges to be done 
-			cooldown_time = 5 MINUTES // in any convenient way. if you want to fix this later try using a status_effect
-		if(item.dreamcost == 6) // secondary charge system instead of this shit. 
-			cooldown_time = 15 MINUTES // kept in so the intent is understood.
-		if(item.dreamcost >= 9)
-			cooldown_time = 30 MINUTES*/
+		last_dreamcost = item.dreamcost
+		user.mind.sleep_adv.sleep_adv_points -= last_dreamcost
 		var/obj/item/I = new item (get_turf(user))
 		user.put_in_hands(I)
 		alreadychoosing = FALSE
 		return TRUE
+
+/datum/action/cooldown/spell/noc/grimoire/get_adjusted_cooldown()
+	switch(last_dreamcost)
+		if(-INFINITY to 2)
+			return 1 MINUTES
+		if(3 to 5)
+			return 5 MINUTES
+		if(6 to 8)
+			return 15 MINUTES
+		if(9 to INFINITY)
+			return 30 MINUTES
 
 /obj/effect/temp_visual/moon/spell
 	icon_state = "spellwarning"
@@ -669,5 +676,4 @@ GLOBAL_LIST_INIT(noc_scrolls, (list(
 	/obj/item/book/granter/spell/noc/mindlink,
 	/obj/item/book/granter/spell/noc/mending,
 	/obj/item/book/granter/spell/noc/blink,
-	/obj/item/book/granter/spell/noc/repulse
 	)))

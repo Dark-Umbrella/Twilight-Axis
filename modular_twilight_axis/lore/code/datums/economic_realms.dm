@@ -2,7 +2,7 @@
 	id = REALM_ZYBANTU
 	name = "Zybantu"
 	roll_weight = TRADE_REALM_WEIGHT_DEFAULT
-	demanded_categories = list(NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_ENCHANTMENTS, NAVIGATOR_BUCKET_VALUABLES_CRAFTED, NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_POTIONS_REAGENTS, NAVIGATOR_BUCKET_BEVERAGE)
+	demanded_categories = list(NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_ENCHANTMENTS, NAVIGATOR_BUCKET_VALUABLES_CRAFTED, NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_POTIONS_REAGENTS)
 	ship_name_words = list(
 		"Ziggurat", "Qamar", "Nasr", "Sultan", "Amir",
 		"Miraj", "Zafir", "Bahr", "Sahra", "Ranesh",
@@ -86,7 +86,7 @@
 	id = REALM_VALORIA
 	name = "Valoria"
 	roll_weight = TRADE_REALM_WEIGHT_NEIGHBOR
-	demanded_categories = list(NAVIGATOR_BUCKET_ARMOR_HEAVY, NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_BEVERAGE, NAVIGATOR_BUCKET_VALUABLES_CRAFTED, NAVIGATOR_BUCKET_POTIONS_REAGENTS)
+	demanded_categories = list(NAVIGATOR_BUCKET_ARMOR_HEAVY, NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_VALUABLES_CRAFTED, NAVIGATOR_BUCKET_POTIONS_REAGENTS)
 	ship_name_words = list(
 		"Eterna", "Anizotti", "Astinia", "Valonara", "Marconza",
 		"Veriben", "Monezza", "Saluzzo", "Dandolo", "Anafesto",
@@ -166,7 +166,7 @@
 	id = REALM_HAMMERHOLD_TA
 	name = "Hammerhold"
 	roll_weight = TRADE_REALM_WEIGHT_DEFAULT
-	demanded_categories = list(NAVIGATOR_BUCKET_ARMOR_HEAVY, NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_BEVERAGE, NAVIGATOR_BUCKET_ENGINEERING, NAVIGATOR_BUCKET_VALUABLES_CRAFTED)
+	demanded_categories = list(NAVIGATOR_BUCKET_ARMOR_HEAVY, NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_ENGINEERING, NAVIGATOR_BUCKET_VALUABLES_CRAFTED)
 	ship_name_words = list(
 		"Rusalka", "Borei", "Cherno", "Morozko", "Imperatritsa",
 		"Voevoda", "Snegurochka", "Zimorodok", "Koldun", "Viy",
@@ -215,7 +215,7 @@
 	victualling_fresh_pool = list(
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/friedegg/hammerhold, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_LUXURY),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/meat/poultry/cutlet/fried, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX, "price" = VICTUALLING_PRICE_STEAK),
-		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/meat/steak/bear/fried, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_FEAST),
+		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/meat/bear/fried, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_FEAST),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/preserved/potato_baked, "qty_min" = VICTUALLING_QTY_LARGE_MIN, "qty_max" = VICTUALLING_QTY_LARGE_MAX, "price" = VICTUALLING_PRICE_BREAD),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/pie/cooked/pot, "qty_min" = VICTUALLING_QTY_MEDIUM_MIN, "qty_max" = VICTUALLING_QTY_MEDIUM_MAX, "price" = VICTUALLING_PRICE_STEAK),
 		list("typepath" = /obj/item/reagent_containers/food/snacks/rogue/cheesebun, "qty_min" = VICTUALLING_QTY_SMALL_MIN, "qty_max" = VICTUALLING_QTY_SMALL_MAX, "price" = VICTUALLING_PRICE_SIMPLE),

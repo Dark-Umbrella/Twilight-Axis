@@ -10,15 +10,6 @@
 	if(world.time > last_fatigued + delay) //regen fatigue 
 		var/added = energy / max_energy
 		added = round(-10 + (added * - 40))
-	
-		if(ishuman(src))
-			var/mob/living/carbon/human/H = src
-			if(H.breath_remaining <= 0) added = 0 
-			
-			else if((H.is_swimming || H.is_underwater) && !H.resting && H.stat == CONSCIOUS)
-				added = 0 
-		
-		
 		if(src.climbing) // no stam regen while climbing guh
 			added = 0
 		if(HAS_TRAIT(src, TRAIT_MISSING_NOSE))
@@ -62,7 +53,7 @@
 		return TRUE
 	if(HAS_TRAIT(src, TRAIT_INFINITE_ENERGY))
 		return TRUE
-	if(m_intent == MOVE_INTENT_RUN && (mobility_flags & MOBILITY_STAND))
+	if(added < 0 && m_intent == MOVE_INTENT_RUN && (mobility_flags & MOBILITY_STAND))
 		if(isnull(buckled))
 			mind && mind.add_sleep_experience(/datum/skill/misc/athletics, (STAINT*0.02))
 	energy += added
@@ -113,8 +104,11 @@
 		return TRUE
 
 	var/true_added = added
-	if(HAS_TRAIT(src, TRAIT_FORTITUDE))
-		added = added * 0.5
+	if(added > 0)
+		if(HAS_TRAIT(src, TRAIT_FORTITUDE))
+			added = added * 0.5
+		else if(HAS_TRAIT(src, TRAIT_LESSER_FORTITUDE))
+			added = added * 0.75
 
 	if(added < 0 && HAS_TRAIT(src, TRAIT_FROZEN_STAMINA))
 		added = 0
@@ -170,17 +164,6 @@
 			emote("fatigue", forced = force_emote)
 		else
 			emote(emote_override, forced = force_emote)
-
-		var/turf/T = get_turf(src)
-		if(istype(T, /turf/open/water/transparent))
-			var/turf/below = GET_TURF_BELOW(T)
-			if(below && istype(below, /turf/open/water/transparent))
-				visible_message(span_danger("[src] loses all stamina and sinks into the depths!"))
-				forceMove(below)
-				set_resting(TRUE)
-			else
-				
-				set_resting(TRUE)
 
 		blur_eyes(2)
 		last_fatigued = world.time + 3 SECONDS //extra time before fatigue regen sets in

@@ -13,7 +13,7 @@
 	var/datum/fund/linked_fund
 	COOLDOWN_DECLARE(patronage_writ_cooldown)
 	var/fund_warned = FALSE
-	var/alert_jobs = list("Grand Duke", "Steward", "Clerk")
+	var/alert_jobs = list("Grand Duke", "Steward", "Clerk", "Sultan", "Vizier") //TA EDIT
 	var/alert_location = "The Vault"
 	var/supports_loans = TRUE
 	var/bash_floor = 1500
@@ -410,7 +410,7 @@
 
 
 /obj/structure/roguemachine/vaultbank/proc/get_authority_label()
-	return "the Steward, Clerk, Grand Duke, or Regent"
+	return "the Steward, Clerk, Grand Duke, Sultan, Vizier, or Regent" //TA EDIT
 
 /obj/structure/roguemachine/vaultbank/proc/announce_robbery(amount)
 	loud_message("A loud clattering of coins spilling onto stone echoes", hearing_distance = 14)
@@ -418,7 +418,7 @@
 /obj/structure/roguemachine/vaultbank/proc/can_issue_loan(mob/user)
 	if(!user)
 		return FALSE
-	if(user.job == "Steward" || user.job == "Clerk" || user.job == "Grand Duke")
+	if(user.job == "Steward" || user.job == "Clerk" || user.job == "Grand Duke" || user.job == "Sultan" || user.job == "Vizier") // TA edit
 		return TRUE
 	if(SSticker.regentmob && user == SSticker.regentmob)
 		return TRUE
@@ -804,7 +804,7 @@
 /obj/structure/roguemachine/vaultbank/innkeeper/can_withdraw(mob/user, amount)
 	if(!user)
 		return FALSE
-	return user.job == "Innkeeper"
+	return user.job in list("Innkeeper", "Tapster", "Cook")
 
 /obj/structure/roguemachine/vaultbank/innkeeper/can_view(mob/user)
 	if(!user)
@@ -812,7 +812,7 @@
 	return user.job in list("Innkeeper", "Tapster", "Cook")
 
 /obj/structure/roguemachine/vaultbank/innkeeper/get_authority_label()
-	return "the Innkeeper"
+	return "the Innkeeper, Tapster or Cook"
 
 /obj/structure/roguemachine/vaultbank/innkeeper/enforce_placement()
 	return

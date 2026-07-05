@@ -50,7 +50,7 @@
 	active_background_icon_state = "spell1"
 	button_icon = 'icons/mob/actions/roguespells.dmi'
 	button_icon_state = "shieldsparkles"
-	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_PHASED
+	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_PHASED|AB_CHECK_IMMOBILE
 	panel = "Spells"
 	click_to_activate = TRUE
 	unset_after_click = FALSE
@@ -130,6 +130,8 @@
 	var/self_cast_possible = TRUE
 	/// The casting range of our spell.
 	var/cast_range = 7
+	/// If TRUE, this spell may be cast at a target on a different Z-level. Defaults FALSE; only projectile spells opt in.
+	var/allow_cross_z = FALSE
 	/// Variable dictating if the spell will use turf based aim assist.
 	var/aim_assist = TRUE
 
@@ -138,13 +140,15 @@
 	var/charge_required = TRUE
 	/// Whether we're currently charging the spell.
 	var/currently_charging = FALSE
+	/// Whether the charge bar has completed and the spell is being held ready. While TRUE, hold_drain bleeds per process tick.
+	var/fully_charged = FALSE
 	/**
-	 * Cost to charge.
+	 * Per-tick cost to hold the spell once charged. Charge-up itself is free.
 	 *
-	 * Total drain is: ([charge_time] / [process_time]) * charge_drain
-	 * process_time is currently 4 from SSfastprocess.
+	 * Drained every SSfastprocess tick (wait = 2, i.e. 5x/second) from the moment
+	 * the charge bar completes until the spell is cast or dropped.
 	 */
-	var/charge_drain = 0
+	var/hold_drain = 1
 	/// Time to charge.
 	var/charge_time = 0
 	/// Slowdown while charging.
@@ -174,6 +178,8 @@
 	var/weapon_penalty_active = FALSE
 	/// If TRUE, this spell ignores armor cooldown penalties (for armored casters like Tithebound).
 	var/ignore_armor_penalty = FALSE
+	/// If TRUE, casting will -not- apply the combat tag (skips stealth reveal and rest interruption).
+	var/ignore_combat_tag = FALSE
 	/// If TRUE, spell charges on button press, then waits for a separate middle-click to cast.
 	/// If FALSE (default), spell uses hold-and-release: hold middle-click to charge, release to cast.
 	var/charge_then_click = FALSE
@@ -236,6 +242,26 @@
 	return ..()
 
 /datum/action/cooldown/spell/process()
+	if(fully_charged)
+		if(!owner)
+			return PROCESS_KILL
+		if(!can_cast_spell(TRUE))
+			cancel_casting()
+			return PROCESS_KILL
+		if(hold_drain)
+			if(primary_resource_type == SPELL_COST_STAMINA && iscarbon(owner))
+				var/mob/living/carbon/C = owner
+				if(C.stamina >= C.max_stamina)
+					owner.balloon_alert(owner, "Too exhausted to hold the spell!")
+					cancel_casting()
+					return PROCESS_KILL
+			if(!check_resource_available(primary_resource_type, hold_drain))
+				owner.balloon_alert(owner, "I cannot hold the spell any longer!")
+				cancel_casting()
+				return PROCESS_KILL
+			invoke_resource_cost(primary_resource_type, hold_drain)
+		return
+
 	if(!currently_charging)
 		return ..() // Parent handles cooldown icon updates
 
@@ -246,20 +272,6 @@
 		cancel_casting()
 		return PROCESS_KILL
 
-	if(charge_drain)
-		// Cancel charging if caster is at max fatigue
-		if(primary_resource_type == SPELL_COST_STAMINA && iscarbon(owner))
-			var/mob/living/carbon/C = owner
-			if(C.stamina >= C.max_stamina)
-				owner.balloon_alert(owner, "Too exhausted to channel!")
-				cancel_casting()
-				return PROCESS_KILL
-		if(!check_resource_available(primary_resource_type, charge_drain))
-			owner.balloon_alert(owner, "I cannot uphold the channeling!")
-			cancel_casting()
-			return PROCESS_KILL
-		invoke_resource_cost(primary_resource_type, charge_drain)
-
 	// Update mouse charge pointer based on progress
 	if(owner.client && charge_started_at && charge_target_time)
 		var/progress = world.time - charge_started_at
@@ -268,18 +280,12 @@
 		if(owner.client.mouse_pointer_icon != new_icon)
 			owner.client.mouse_pointer_icon = new_icon
 
-	// If this is true we hit our charge goal so stop invoking the cost and update the pointer
+	// Charge goal reached — enter the held phase; keep processing so hold_drain bleeds while held.
 	if(world.time > (charge_started_at + charge_target_time))
-		// We don't want that mouseUp to end in sadness
-		if(!check_resource_available(primary_resource_type, charge_drain))
-			owner.balloon_alert(owner, "I cannot uphold the channeling!")
-			cancel_casting()
-			return PROCESS_KILL
-		// Fully charged — swap to charged icon and stop processing
+		fully_charged = TRUE
 		if(owner.client)
 			owner.client.mouse_pointer_icon = 'icons/effects/mousemice/swang/acharged.dmi'
 			playsound(owner, 'sound/magic/charged.ogg', 40, TRUE)
-		return PROCESS_KILL
 
 /datum/action/cooldown/spell/Grant(mob/grant_to)
 	// Spells are hard baked to pratically only work with living owners
@@ -480,6 +486,8 @@
 // Where the cast chain starts
 /datum/action/cooldown/spell/PreActivate(atom/target)
 	charged = FALSE
+	fully_charged = FALSE
+	STOP_PROCESSING(SSfastprocess, src)
 	if(owner?.channeling_spell == src)
 		owner.channeling_spell = null
 	if(!is_valid_target(target))
@@ -489,8 +497,8 @@
 
 	return Activate(target)
 
-/// Returns TRUE if the caster is holding a non-implement rogueweapon (not a shield) or ranged weapon in either hand,
-/// or recently had one.
+/// Returns TRUE if the caster is holding a penalized weapon in either hand, or recently had one.
+/// Staves and Arcyne Armaments are valid spell conduits and do not trigger this penalty.
 /datum/action/cooldown/spell/proc/check_weapon_in_hand()
 	if(!weapon_cast_penalized)
 		return FALSE
@@ -498,6 +506,8 @@
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 	for(var/obj/item/held in list(H.get_active_held_item(), H.get_inactive_held_item()))
+		if(ispath(held?.associated_skill, /datum/skill/combat/staves) || ispath(held?.associated_skill, /datum/skill/combat/arcyne))
+			continue
 		if(istype(held, /obj/item/gun))
 			return TRUE
 		if(!istype(held, /obj/item/rogueweapon))
@@ -562,6 +572,9 @@
 	if(weapon_penalty_active)
 		newcd += base * WEAPON_CAST_PENALTY
 
+	if(HAS_TRAIT(living_owner, TRAIT_LEYLINE_HASTE)) // Hastens CD by 25%.
+		newcd *= 0.75
+
 	return newcd
 
 /// Returns the armor cooldown penalty multiplier for this spell and caster.
@@ -617,6 +630,12 @@
 	if(HAS_TRAIT(owner, TRAIT_NOC_CURSE))
 		if(feedback)
 			owner.balloon_alert(owner, "My magicka has left me...")
+		return FALSE
+
+	var/mob/living/living_owner = owner
+	if(istype(living_owner) && living_owner.has_status_effect(/datum/status_effect/debuff/exposed))
+		if(feedback)
+			owner.balloon_alert(owner, "Too exposed to focus!")
 		return FALSE
 
 	for(var/datum/action/cooldown/spell/spell in owner.actions)
@@ -712,6 +731,8 @@
 			var/mob/living/carbon/human/wpn_check = owner
 			var/has_weapon_now = FALSE
 			for(var/obj/item/held in list(wpn_check.get_active_held_item(), wpn_check.get_inactive_held_item()))
+				if(ispath(held?.associated_skill, /datum/skill/combat/staves) || ispath(held?.associated_skill, /datum/skill/combat/arcyne))
+					continue
 				if(istype(held, /obj/item/gun) || (istype(held, /obj/item/rogueweapon) && !istype(held, /obj/item/rogueweapon/shield)))
 					has_weapon_now = TRUE
 					break
@@ -741,6 +762,9 @@
 			RegisterSignal(owner.client, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(start_casting))
 		build_all_button_icons()
 		return FALSE
+
+	if(QDELETED(src))
+		return TRUE
 
 	// Spell succeeded - do invocation and sound effects after cast
 	// Placed after cast() so failed casts don't trigger invocations
@@ -791,7 +815,7 @@
 		if(sig_return & SPELL_CANCEL_CAST)
 			return sig_return
 
-		if(spell_requirements & SPELL_REQUIRES_SAME_Z)
+		if(!allow_cross_z)
 			var/turf/caster_t = get_turf(owner)
 			var/turf/target_t = get_turf(cast_on)
 			if(caster_t && target_t && caster_t.z != target_t.z)
@@ -822,7 +846,7 @@
 		var/require_no_move = (spell_requirements & SPELL_REQUIRES_NO_MOVE)
 		on_start_charge()
 		var/success = TRUE
-		if(!do_after(owner, charge_time, needhand = FALSE, extra_checks = CALLBACK(src, PROC_REF(do_after_checks), owner, cast_on), no_interrupt = !require_no_move))
+		if(!do_after(owner, charge_time, needhand = FALSE, extra_checks = CALLBACK(src, PROC_REF(do_after_checks), owner, cast_on), no_interrupt = !require_no_move, allow_movement = !require_no_move))
 			success = FALSE
 			sig_return |= SPELL_CANCEL_CAST
 
@@ -880,6 +904,9 @@
 		var/mob/living/carbon/human/H = owner
 		if(H.has_status_effect(/datum/status_effect/buff/clash))
 			H.bad_guard(span_warning("I can't focus while casting spells!"), cheesy = TRUE)
+
+		if(!ignore_combat_tag)
+			H.changeNext_inCombat(IN_COMBAT_DELAY)
 
 	// Sparks and smoke can only occur if there's an owner to source them from.
 	if(sparks_amt)
@@ -949,6 +976,7 @@
 /// When we start charging the spell called from set_click_ability or start_casting
 /datum/action/cooldown/spell/proc/on_start_charge()
 	currently_charging = TRUE
+	fully_charged = FALSE
 	if(owner)
 		owner.tempfixeye = TRUE
 		if(!owner.fixedeye)
@@ -1011,6 +1039,7 @@
 		return
 
 	currently_charging = FALSE
+	fully_charged = FALSE
 	charge_started_at = null
 	charge_target_time = null
 	// Only drop the cache if we're not about to enter the "charged, waiting to fire" phase
@@ -1313,13 +1342,19 @@
 	else
 		stats += span_info("Range: Self")
 
+	var/display_charge = charge_time
+	if(user && HAS_TRAIT(user, TRAIT_SWIFTCAST))
+		display_charge = 0
+
 	// Charge time
-	if(charge_time > 0)
-		stats += span_info("Charge time: [DisplayTimeText(charge_time)]")
-		if(spell_requirements & SPELL_REQUIRES_NO_MOVE)
-			stats += span_warning("Channeling is interrupted by movement.")
+	if(display_charge > 0)
+		stats += span_info("Charge time: [DisplayTimeText(display_charge)]")
+		if(HAS_TRAIT(user, TRAIT_LEYLINE_HASTE))
+			stats += span_info(" <font color='#00e1ff'>Ley Lines (-25%)</font>")
 	else
 		stats += span_info("Charge time: Instant")
+		if(HAS_TRAIT(user, TRAIT_SWIFTCAST))
+			stats += span_info(" <font color='#8c00ff'>(Swiftcast)</font>")
 
 	// Cooldown
 	var/base_cd = initial(cooldown_time)
@@ -1405,6 +1440,8 @@
 		var/armor_mod = base * armor_mult
 		var/armor_label = user.check_armor_skill() ? "Armor weight" : "Untrained armor"
 		breakdown += span_smallred("  [armor_label]: +[DisplayTimeText(armor_mod)]")
+	if(HAS_TRAIT(user, TRAIT_LEYLINE_HASTE))
+		breakdown += span_smallgreen("  <font color='#00e1ff'>Ley Lines (-25%)</font>")
 	return breakdown
 
 /// Breakdown of resource cost modifiers for examine.
@@ -1486,6 +1523,13 @@
 	charge_started_at = world.time
 	charge_target_time = charge_time
 
+	if(HAS_TRAIT(owner, TRAIT_SWIFTCAST)) // Makes your next spell be instant.
+		charge_target_time = 0
+	else if(HAS_TRAIT(owner, TRAIT_LEYLINE_HASTE)) // Leyline cast reduction by 25%.
+		charge_target_time = charge_time * 0.75
+	else
+		charge_target_time = charge_time
+
 	return COMPONENT_CLIENT_MOUSEDOWN_INTERCEPT
 
 /datum/action/cooldown/spell/proc/try_casting(client/source, atom/_target, turf/location, control, params)
@@ -1511,10 +1555,12 @@
 		if(!success)
 			// Still charging — ignore the mouseup, keep charging
 			return
-		// Charge complete — transition to "click to cast" mode
+		// Charge complete — transition to "click to cast" mode, still bleeding hold_drain while held.
 		on_end_charge(TRUE)
+		fully_charged = TRUE
+		START_PROCESSING(SSfastprocess, src)
 		charge_started_at = 0
-		UnregisterSignal(source, COMSIG_CLIENT_MOUSEUP)
+		UnregisterSignal(source, list(COMSIG_CLIENT_MOUSEUP, COMSIG_CLIENT_MOUSEDOWN))
 		RegisterSignal(source, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(cast_after_charge))
 		auto_cancel_timer = addtimer(CALLBACK(src, PROC_REF(cancel_casting)), 30 SECONDS, TIMER_STOPPABLE)
 		if(owner)
@@ -1563,6 +1609,7 @@
 		_target = resolve_out_of_view_click(source, params)
 		if(!_target)
 			// Re-register so they can try again
+			UnregisterSignal(source, COMSIG_CLIENT_MOUSEDOWN)
 			RegisterSignal(source, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(cast_after_charge))
 			return
 
@@ -1589,7 +1636,8 @@
 			else
 				playsound(get_turf(target), pick(target.parry_sound), 100)
 		target.apply_status_effect(/datum/status_effect/buff/parry_buffer)
-		target.apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+		if(attacker != target)
+			target.apply_status_effect(/datum/status_effect/buff/adrenaline_rush/ranged)
 		guard.deflected_spell = TRUE
 		target.remove_status_effect(/datum/status_effect/buff/clash)
 		if(attacker && ishuman(attacker))
@@ -1674,7 +1722,7 @@
 	vis_contents |= wave
 	wave.color = spell_color
 
-/// Override on spells that have an alt mode (e.g. cycling ward types). Called by the Alt Mode keybind (Ctrl+G).
+/// Override on spells that have an alt mode (e.g. cycling ward types). Called by the Alt Mode keybind (Shift+G).
 /// Return TRUE if handled.
 /datum/action/cooldown/spell/proc/toggle_alt_mode(mob/user)
 	return FALSE
@@ -1686,4 +1734,3 @@
 
 	if(spell_rune)
 		QDEL_NULL(spell_rune)
-
