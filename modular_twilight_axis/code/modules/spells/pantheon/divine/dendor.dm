@@ -245,7 +245,6 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_POKE
-	charge_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 20 SECONDS
@@ -401,7 +400,6 @@
 
 	charge_required = TRUE
 	charge_time = 2 SECONDS
-	charge_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 20 SECONDS
