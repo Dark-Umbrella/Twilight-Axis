@@ -514,3 +514,8 @@
 	SEND_SIGNAL(user, COMSIG_TREE_TRANSFORMED)
 	to_chat(H, span_notice("You transform the tree into a wise tree."))
 	playsound(T, 'sound/ambience/noises/mystical (4).ogg', 50, TRUE)
+
+/obj/effect/temp_visual/trap/emergence
+	color = GLOW_COLOR_EARTHEN
+	light_color = GLOW_COLOR_EARTHEN
+	duration = TELEGRAPH_SKILLSHOT
