@@ -164,7 +164,6 @@
 	skillcraft = /datum/skill/craft/sewing
 
 /obj/item/storage/roguebag/crafted
-	sellprice = 4
 
 /datum/crafting_recipe/roguetown/survival/pipe
 	name = "wood pipe"
@@ -350,6 +349,7 @@
 		/obj/item/natural/fur = 1
 		)
 	craftdiff = 1
+	subtype_reqs = TRUE
 
 /datum/crafting_recipe/roguetown/survival/whetstone
 	name = "whetstone"
