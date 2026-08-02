@@ -6,7 +6,6 @@
 	possible_item_intents = list(/datum/intent/use)
 	force = 0
 	throwforce = 0
-	flags_ai_inventory = AI_ITEM_BANDAGE
 	obj_flags = null
 	resistance_flags = FLAMMABLE
 	slot_flags = ITEM_SLOT_HIP
