@@ -127,3 +127,6 @@
 	name = "quicksilver (blessed silver)"
 	reqs = list(/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius/bloodied = 1, /datum/reagent/water/blessed = 45, /obj/item/natural/cloth = 1, /obj/item/alch/silverdust_blessed = 1)
 
+/datum/crafting_recipe/roguetown/alchemy/qsabsolution/blessed
+	name = "absolving silver (blessed silver)"
+	reqs = list(/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius/bloodied = 1, /datum/reagent/water/blessed = 45, /obj/item/natural/cloth = 1, /obj/item/alch/silverdust_blessed = 1)
