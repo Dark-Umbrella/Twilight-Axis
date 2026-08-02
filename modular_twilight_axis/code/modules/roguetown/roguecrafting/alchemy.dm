@@ -123,11 +123,6 @@
 	reqs = list(/obj/item/ash = 2, /obj/item/ointment/burn = 3, /obj/item/ointment/wound = 3)
 	craftdiff = 2
 
-/datum/crafting_recipe/roguetown/alchemy/quicksilver_holy
-	name = "quicksilver (alt)"
-	category = "Table"
-	result = list(/obj/item/quicksilver = 1)
-
 /datum/crafting_recipe/roguetown/alchemy/quicksilver/blessed
 	name = "quicksilver (blessed silver)"
 	reqs = list(/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius/bloodied = 1, /datum/reagent/water/blessed = 45, /obj/item/natural/cloth = 1, /obj/item/alch/silverdust_blessed = 1)
